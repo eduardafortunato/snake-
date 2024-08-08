@@ -1,0 +1,41 @@
+import pygame
+
+pygame.init()
+
+# Configurações da janela
+largura, altura = 800, 600
+tela = pygame.display.set_mode((largura, altura))
+pygame.display.set_caption("Arrastar Objetos")
+
+# Cor e forma do objeto
+vermelho = (255, 0, 0)
+retangulo = pygame.Rect(100, 100, 100, 50)
+
+# Variáveis para controlar o arrastamento
+arrastando = False
+
+rodando = True
+while rodando:
+    for evento in pygame.event.get():
+        if evento.type == pygame.QUIT:
+            rodando = False
+        elif evento.type == pygame.MOUSEBUTTONDOWN:   
+           if retangulo.collidepoint(evento.pos):
+                arrastando = True
+                mouse_x, mouse_y = evento.pos
+                offset_x = retangulo.x - mouse_x
+                offset_y = retangulo.y - mouse_y
+        elif evento.type == pygame.MOUSEBUTTONUP:
+            arrastando = False
+        elif evento.type == pygame.MOUSEMOTION:
+            if arrastando:
+                mouse_x, mouse_y = evento.pos
+                retangulo.x = mouse_x + offset_x
+                retangulo.y = mouse_y + offset_y
+
+    # Desenhando
+    tela.fill((255, 255, 255))
+    pygame.draw.rect(tela, vermelho, retangulo)
+    pygame.display.flip()
+
+pygame.quit()

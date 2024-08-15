@@ -1,0 +1,139 @@
+
+#Título: criando uma tela inicial de game
+#link do material da aula: https://bit.ly/pythontela01
+
+#Setup de Entrada - Import Bibliotecas-----------------------------------------#
+import pygame, sys
+
+#Setup de Entrada - Definições ----------------------------------------------- #
+mainClock = pygame.time.Clock()
+from pygame.locals import *
+pygame.init()
+pygame.display.set_caption("tela")
+screen = pygame.display.set_mode((800, 600),0,32)
+
+font = pygame.font.SysFont(None, 30)
+
+#Definição de Escrita de Texto-------------------------------------------------#
+def draw_text(text, font, color, surface, x, y):
+    textobj = font.render(text, 1, color)
+    textrect = textobj.get_rect()
+    textrect.topleft = (x, y)
+    surface.blit(textobj, textrect)
+
+click = False
+
+#Definição de ações do Menu Inicial--------------------------------------------#
+def main_menu():
+    while True:
+#defini a cor do menu principal
+        screen.fill((192,217,217 ))
+        draw_text('Snake Game', font, (95,159,159), screen, 330, 40)
+
+        mx, my = pygame.mouse.get_pos()
+
+        button_1 = pygame.Rect(300, 200, 200, 50)
+        button_2 = pygame.Rect(300, 300, 200, 50)
+        button_3 = pygame.Rect(300, 400, 200, 50)
+      #adicionei um botão de comentarios
+        button_4 = pygame.Rect(300, 500, 200, 50)
+        if button_1.collidepoint((mx, my)):
+            if click:
+                game()
+        if button_2.collidepoint((mx, my)):
+            if click:
+                options()
+        if button_3.collidepoint((mx, my)):
+            if click:
+                exite()
+        if button_4.collidepoint((mx, my)):
+                if click:
+                    comments()
+              #troquei de cor segundo a a RGB
+        pygame.draw.rect(screen, (50, 205, 153), button_1)
+        pygame.draw.rect(screen, (50, 205, 153), button_2)
+        pygame.draw.rect(screen, (50, 205, 153), button_3)
+        pygame.draw.rect(screen, (50,205,  153), button_4)
+        draw_text('Jogar', font, (255, 255, 255), screen, 372, 215)
+        draw_text('Opções', font, (255, 255, 255), screen, 363, 315)
+        draw_text('Sair', font, (255, 255, 255), screen, 378, 415)
+      #adicionei um botão comentarios
+        draw_text('Comentarios',font, (255, 255, 255), screen, 345, 515)
+
+        click = False
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+
+        pygame.display.update()
+        mainClock.tick(60)
+
+#Definições dos Submenus dos Botões - Game - Opções - Sair --------------------#
+def game():
+    running = True
+    while running:
+        screen.fill((192,217,217))
+
+        draw_text('Joguinho', font, (255, 255, 255), screen, 20, 20)
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = False
+
+        pygame.display.update()
+        mainClock.tick(60)
+
+def options():
+    running = True
+    while running:
+        screen.fill((192,217,217))
+
+        draw_text('Escolha', font, (255, 255, 255), screen, 20, 20)
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = False
+
+        pygame.display.update()
+        mainClock.tick(60)
+
+def exite():
+    pygame.quit()
+    sys.exit()
+  
+def comments():
+    running = True
+    while running:
+        screen.fill((192,217,217))
+        
+        draw_text('Fale sobre', font, (255, 255, 255), screen, 20, 20)
+        for event in pygame.event.get():
+           if event.type == QUIT:
+                pygame.quit()
+                sys.comments()
+           if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                   running = False
+
+        pygame.display.update()
+        mainClock.tick(60)
+def comments():
+    pygame.quit()
+    sys.exit()
+             
+
+main_menu()

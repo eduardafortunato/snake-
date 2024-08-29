@@ -1,0 +1,57 @@
+import pygame
+
+# Inicializa o Pygame
+pygame.init()
+
+# Configura a janela
+screen_width, screen_height = 800, 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Grade Dinâmica")
+
+# Cores
+black = (0, 0, 0)
+white = (255, 255, 255)
+
+# Loop principal
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    # Preenche a tela de branco
+    screen.fill(white)
+
+    # Desenha as linhas da grade
+    step = 50
+    for x in range(0, screen_width, step):
+        pygame.draw.line(screen, black, (x, 0), (x, screen_height))
+    for y in range(0, screen_height, step):
+        pygame.draw.line(screen, black, (0, y), (screen_width, y))
+
+    # Atualiza a tela
+    pygame.display.flip()
+import tkinter as tk
+
+# Criar a janela principal
+root = tk.Tk()
+root.title("Minha Aplicação")
+
+# Criar um botão
+botao_acima = tk.Button(root, text="Botão Acima", command=minha_funcao)
+botao_acima.grid(row=0, column=0, columnspan=3)  # Ocupa as 3 primeiras colunas
+
+# Criar a grade
+for i in range(1, 4):  # Começamos em 1 para deixar espaço para o botão
+    for j in range(3):
+        label = tk.Label(root, text=f"Linha {i}, Coluna {j}")
+        label.grid(row=i, column=j)
+
+# Função que será executada ao clicar no botão
+def minha_funcao():
+    print("Botão pressionado!")
+
+# Iniciar o loop principal
+root.mainloop()
+# Encerra o Pygame
+pygame.quit()

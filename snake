@@ -1,0 +1,92 @@
+import pygame, random
+from pygame.locals import *
+
+#definição de gerador de número randômico inteiro
+def on_grid_random():
+    x = random.randint(0,590)
+    y = random.randint(0,590)
+    return (x//10 * 10, y//10 * 10)
+
+#definição de colisão entre a cobrinha e o pontinho vermelho
+def colisão(c1, c2):
+    return (c1[0] == c2[0]) and (c1[1] == c2[1])
+
+#como definir colisão na borda?
+
+UP = 0
+RIGHT = 1
+DOWN = 2
+LEFT = 3
+
+pygame.init()
+screen = pygame.display.set_mode((600,600))
+
+pygame.display.set_caption('Jogo da Cobrinha')
+
+#desenho da cobrinha por meio dos pontos cartesianos (x,y) em formato matricial [a11,a12,a13,a14]
+cobra = [(200, 200), (210, 200), (220,200), (230, 200)] 
+cobra_skin = pygame.Surface((10,10))
+cobra_skin.fill((64,224,208))
+
+#gerador do pontinho
+pontinho_pos = on_grid_random()
+pontinho = pygame.Surface((10,10))
+pontinho.fill((255,0,0))
+
+direcao = LEFT
+
+clock = pygame.time.Clock()
+
+font = pygame.font.Font('freesansbold.ttf', 18)
+placar = 0
+
+while True:
+    clock.tick(10)
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+
+#controle da cobrinha com as teclas direcionais do teclado
+        if event.type == KEYDOWN:
+            if event.key == K_UP:
+                direcao = UP
+            if event.key == K_DOWN:
+                direcao = DOWN
+            if event.key == K_LEFT:
+                direcao = LEFT
+            if event.key == K_RIGHT:
+                direcao = RIGHT
+                
+#loop de colisão com o pontinho
+    if colisão(cobra[0], pontinho_pos):
+        pontinho_pos = on_grid_random()
+        cobra.append((0,0))
+        placar = placar + 1
+
+#movimentação da cobrinha 
+    for i in range(len(cobra) - 1, 0, -1):
+        cobra[i] = (cobra[i-1][0], cobra[i-1][1])
+
+#loop de movimentação da cobrinha de acordo com os eixos cartesianos
+    if direcao == UP:
+        cobra[0] = (cobra[0][0], cobra[0][1] - 10)
+    if direcao == DOWN:
+        cobra[0] = (cobra[0][0], cobra[0][1] + 10)
+    if direcao == RIGHT:
+        cobra[0] = (cobra[0][0] + 10, cobra[0][1])
+    if direcao == LEFT:
+        cobra[0] = (cobra[0][0] - 10, cobra[0][1])
+        
+#desenho na tela e placar
+    screen.fill((255,153,204)) 
+    screen.blit(pontinho, pontinho_pos)
+    for pos in cobra: 
+        screen.blit(cobra_skin,pos)
+
+    placar_font = font.render('Placar: %s' % (placar), True, (255, 255, 255))
+    placar_rect = placar_font.get_rect()
+    placar_rect.topleft = (600 - 120, 10)
+    
+    screen.blit(placar_font, placar_rect)
+    
+    pygame.display.update()

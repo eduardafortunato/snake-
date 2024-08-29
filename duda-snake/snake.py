@@ -1,97 +1,163 @@
+#Título: criando uma tela inicial de game
+#link do material da aula: https://bit.ly/pythontela01
+
+#Setup de Entrada - Import Bibliotecas-----------------------------------------#
 import pygame, sys
-import math
-import random
-import time
 
+#Setup de Entrada - Definições ----------------------------------------------- #
+mainClock = pygame.time.Clock()
+from pygame.locals import *
 pygame.init()
+# Configura a janela
+screen_width, screen_height = 600, 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Grade Dinâmica")
 
-largura_janela = 1920   
-altura_janela = 1080
-pygame.display.set_caption('jogo da galinha')
-clock = pygame.time.Clock()
-
-fgExit = False
-
-cenario= pygame.image.load('menu.png')
-personagem= pygame.image.load('snake.right.png')
-personagemup= pygame.image.load('snake.up.png')
-personagemdo= pygame.image.load('snake.down.png')
-personagemle= pygame.image.load('snake.left.png')
-personagemri= pygame.image.load('snake.right.png')
-personagem2 = pygame.image.load ('maca.png')
-
-tela = pygame.display.set_mode((largura_janela, altura_janela))
-x = (largura_janela * 0.1)
-y = (altura_janela * 0.5)#posiöäao do personagem
-x1 = 0
-x2 = 0
-y1 = 0
-y2 = 0
-personagem_speed = 0
-
-xpersonagem = x+45
-ypersonagem = y+65
-xpersonagem2 = 500+96 #atenção! 128 é o raio do meu cogumelo!
-ypersonagem2 = 300+96
-x_1 = x
-y_1 = y
-t = 0
-
-def colisão():
-    distancia =  math.sqrt(math.pow(xpersonagem-xpersonagem2,2)+math.pow(ypersonagem-ypersonagem2,2))
-    print (distancia)
-    if distancia<96+50:
-        return True
-    else:
-        return False
-
-while not fgExit:
+# Cores
+rosa = (255, 79, 118)
+white = (254, 161, 182)
+vermelho = (127, 1, 55)
+# Loop principal
+running = True
+while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            fgExit = True
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT:
-                x1 = 0
-            if event.key == pygame.K_RIGHT:
-                x2 = 0
-            if event.key == pygame.K_UP:
-                y1 = 0
-            if event.key == pygame.K_DOWN:
-                y2 = 0
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                x1 = -5
-                personagem = personagemle
-            if event.key == pygame.K_RIGHT:
-                x2 = 5
-                personagem = personagemri
-            if event.key == pygame.K_UP:
-                y1 = -5
-                personagem = personagemup
-            if event.key == pygame.K_DOWN:
-                y2 = 5
-                personagem = personagemdo #personagem se mexe pra direção da tecla 
+            running = False
 
-    x += x1 + x2
-    y += y1 + y2
-    xpersonagem = x+45
-    ypersonagem = y+65
-    if colisão():
-        tela.fill((0,0,0))
+    # Preenche a tela de branco
+    screen.fill(vermelho)
+
+    # Desenha as linhas da grade
+    step = 25
+    for x in range(0, screen_width, step):
+        pygame.draw.line(screen, white, (x, 0), (x, screen_height), width=10)
+    for y in range(0, screen_height, step):
+        pygame.draw.line(screen, rosa, (0, y), (screen_width, y), width=10)
+
+    # Atualiza a tela
+    pygame.display.flip()
+
+
+
+
+#Definição de Escrita de Texto------------------------------------------------#
+def draw_text(text, font, color, surface, x, y):
+    textobj = font.render(text, 1, color)
+    textrect = textobj.get_rect()
+    textrect.topleft = (x, y)
+    surface.blit(textobj, textrect)
+
+click = False
+
+#Definição de ações do Menu Inicial--------------------------------------------#
+def main_menu():
+    while True:
+
+        screen.fill((255,203,219)) #cor da tela 
+        draw_text('COBRAS E PIQUINIQUES', font, (41,1,6), screen, 240, 40) #cor da fonte
+
+        mx, my = pygame.mouse.get_pos()
+
+        button_1 = pygame.Rect(300, 200, 200, 50)
+        button_2 = pygame.Rect(300, 300, 200, 50)
+        button_3 = pygame.Rect(300, 400, 200, 50)
+        button_4 = pygame.Rect(300, 500, 200, 50)
+        if button_1.collidepoint((mx, my)):
+            if click:
+                game()
+        if button_2.collidepoint((mx, my)):
+            if click:
+                options()
+        if button_4.collidepoint((mx, my)):#botão novo
+            if click:
+                novidades() #defini para qual tela vou ao clicar no botão novo
+        if button_3.collidepoint((mx, my)):
+            if click:
+                exite()
+        pygame.draw.rect(screen, (41,1,6), button_1)
+        pygame.draw.rect(screen, (41,1,6), button_2)
+        pygame.draw.rect(screen, (41,1,6), button_3) # cor do botão 
+        pygame.draw.rect(screen, (41,1,6), button_4)
+        draw_text('JOGAR', font, (255, 255, 255), screen, 350, 215)
+        draw_text('OPÇÕES', font, (255, 255, 255), screen, 340, 315)
+        draw_text('SAIR', font, (255, 255, 255), screen, 365, 415) #cor e posição do texto
+        draw_text('PLACAR', font, (255, 255, 255), screen, 340, 515)# texto do novo botão
+        click = False
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+
         pygame.display.update()
-        time.sleep(4)
-        pygame.quit()
-        x = x_1
-        y = y_1                       
-    else:
-        x_1 = x
-        y_1 = y
+        mainClock.tick(60)
 
-    tela.blit(cenario,(0,0))
-    tela.blit(personagem, (x, y))
-    tela.blit(personagem2, ( xpersonagem2 -96 , ypersonagem2 -96 ))
-    pygame.display.update()
-    clock.tick(60)
+#Definições dos Submenus dos Botões - Game - Opções - Sair --------------------#
+def game():
+    running = True
+    while running:
+        screen.fill((255,203,219))
+
+        draw_text('JOGAR', font, (41,1,6), screen, 20, 20)
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = False
+
+        pygame.display.update()
+        mainClock.tick(60)
+
+def options():
+    running = True
+    while running:
+        screen.fill((255,203,219))
+
+        draw_text('OPÇÕES', font, (41,1,6), screen, 20, 20)
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = False
+
+        pygame.display.update()
+        mainClock.tick(60)
+      
+def novidades(): 
+  running = True
+  while running:
+    #defino tela de novidades
+      screen.fill((255,203,219))
+
+      draw_text('PLACAR', font, (41,1,6), screen, 20, 20) #textos e infos
+
+    # defino os eventos do novo botão (sair da tela)
+      for event in pygame.event.get():
+          if event.type == QUIT:
+              pygame.quit()
+              sys.exit()
+          if event.type == KEYDOWN:
+              if event.key == K_ESCAPE:
+                  running = False
+
+      pygame.display.update()
+      mainClock.tick(60)
+
+def exite():
+    pygame.quit()
+    sys.exit()
 
 
-pygame.quit()
+main_menu()
+    # Atualiza a tela
+pygame.display.flip()

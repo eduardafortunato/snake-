@@ -12,32 +12,8 @@ pygame.init()
 screen_width, screen_height = 600, 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Grade Dinâmica")
-
-# Cores
-rosa = (255, 79, 118)
-white = (254, 161, 182)
-vermelho = (127, 1, 55)
-# Loop principal
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    # Preenche a tela de branco
-    screen.fill(vermelho)
-
-    # Desenha as linhas da grade
-    step = 25
-    for x in range(0, screen_width, step):
-        pygame.draw.line(screen, white, (x, 0), (x, screen_height), width=10)
-    for y in range(0, screen_height, step):
-        pygame.draw.line(screen, rosa, (0, y), (screen_width, y), width=10)
-
-    # Atualiza a tela
-    pygame.display.flip()
-
-
+font = pygame.font.Font('freesansbold.ttf', 32)
+imagem_fundo = pygame.image.load('background.png').convert()
 
 
 #Definição de Escrita de Texto------------------------------------------------#
@@ -53,7 +29,7 @@ click = False
 def main_menu():
     while True:
 
-        screen.fill((255,203,219)) #cor da tela 
+        screen.blit ((255,203,219)) #cor da tela 
         draw_text('COBRAS E PIQUINIQUES', font, (41,1,6), screen, 240, 40) #cor da fonte
 
         mx, my = pygame.mouse.get_pos()
@@ -161,3 +137,5 @@ def exite():
 main_menu()
     # Atualiza a tela
 pygame.display.flip()
+
+screen.blit(imagem_fundo, (0, 0))

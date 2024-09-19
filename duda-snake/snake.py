@@ -13,7 +13,7 @@ screen_width, screen_height = 600, 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Grade Dinâmica")
 font = pygame.font.Font('freesansbold.ttf', 32)
-imagem_fundo = pygame.image.load('background.png').convert()
+#magem_fundo = pygame.image.load('background.png').convert() #nao achou a imagem
 
 
 #Definição de Escrita de Texto------------------------------------------------#
@@ -29,7 +29,7 @@ click = False
 def main_menu():
     while True:
 
-        screen.blit ((255,203,219)) #cor da tela 
+        screen.fill ((255,203,219)) #cor da tela 
         draw_text('COBRAS E PIQUINIQUES', font, (41,1,6), screen, 240, 40) #cor da fonte
 
         mx, my = pygame.mouse.get_pos()
@@ -138,4 +138,4 @@ main_menu()
     # Atualiza a tela
 pygame.display.flip()
 
-screen.blit(imagem_fundo, (0, 0))
+#screen.blit(imagem_fundo, (0, 0))

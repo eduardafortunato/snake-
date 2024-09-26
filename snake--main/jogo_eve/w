@@ -1,0 +1,121 @@
+import pygame, random
+
+# Inicializa o Pygame
+pygame.init()
+from pygame.locals import *
+# Define as cores
+branco = (255, 255, 255)
+preto = (0, 0, 0)
+vermelho = (255, 0, 0)
+verde = (0, 255, 0)
+azul = (0, 0, 255)
+
+#definição de gerador de número randômico inteiro
+def on_grid_random():
+    x = random.randint(0,590)
+    y = random.randint(0,590)
+    return (x//10 * 10, y//10 * 10)
+
+#definição de colisão entre a cobrinha e o pontinho vermelho
+def colisão(c1, c2):
+    return (c1[0] == c2[0]) and (c1[1] == c2[1])
+
+UP = 0
+RIGHT = 1
+DOWN = 2
+LEFT = 3
+
+
+# Define as dimensões da tela
+largura_tela = 800
+altura_tela = 600
+tela = pygame.display.set_mode((largura_tela, altura_tela))
+
+# Classe para a cobra
+class Cobra:
+    def __init__(self):
+        self.corpo = [(200, 200)]
+        self.cor = branco
+
+    def desenhar(self):
+        for segmento in self.corpo:
+            pygame.draw.rect(tela, self.cor, (segmento[0], segmento[1], 20, 20))
+
+# Classe para o objeto
+class Objeto:
+    def __init__(self):
+        self.x = 300
+        self.y = 300
+        self.cor = vermelho
+
+    def desenhar(self):
+        pygame.draw.rect(tela, self.cor, (self.x, self.y, 20, 20))
+
+# Cria as instâncias da cobra e do objeto
+cobra = Cobra()
+objeto = Objeto()
+
+# Loop principal do jogo
+rodando = True
+while rodando:
+    for evento in pygame.event.get():
+        if evento.type == pygame.QUIT:
+            rodando = False 
+
+
+direcao = LEFT
+
+clock = pygame.time.Clock()
+
+font = pygame.font.Font('freesansbold.ttf', 18)
+placar = 0
+
+while True:
+    clock.tick(10)
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+
+ #controle da cobrinha com as teclas direcionais do teclado
+        if event.type == KEYDOWN:
+            if event.key == K_UP:
+                direcao = UP
+            if event.key == K_DOWN:
+                direcao = DOWN
+            if event.key == K_LEFT:
+                direcao = LEFT
+            if event.key == K_RIGHT:
+                direcao = RIGHT
+                
+#loop de colisão com o pontinho
+    if colisão(cobra[0], pontinho_pos):
+        pontinho_pos = on_grid_random()
+        cobra.append((0,0))
+        placar = placar + 1
+
+#movimentação da cobrinha 
+    for i in range(len(cobra) - 1, 0, -1):
+        cobra[i] = (cobra[i-1][0], cobra[i-1][1])
+
+#loop de movimentação da cobrinha de acordo com os eixos cartesianos
+    if direcao == UP:
+        cobra[0] = (cobra[0][0], cobra[0][1] - 10)
+    if direcao == DOWN:
+        cobra[0] = (cobra[0][0], cobra[0][1] + 10)
+    if direcao == RIGHT:
+        cobra[0] = (cobra[0][0] + 10, cobra[0][1])
+    if direcao == LEFT:
+        cobra[0] = (cobra[0][0] - 10, cobra[0][1])
+        
+#desenho na tela e placar
+
+    # Verifica se a cobra colidiu com o objeto
+    if cobra.corpo[0] == (objeto.x, objeto.y):
+        cobra.cor = objeto.cor
+
+    # Desenha na tela
+    tela.fill(preto)
+    cobra.desenhar()
+    objeto.desenhar()
+
+    pygame.display.update()

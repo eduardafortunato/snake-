@@ -140,5 +140,5 @@ def main_loop():
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Verificar se algum botão foi clicado
-                if button["text"] == "Jogar":
-                    trocar_tela("jogo")
+                if colisão ==
+                    trocar_tela("menu")
